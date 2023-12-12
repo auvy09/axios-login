@@ -8,23 +8,37 @@ import {
   InputGroup,
   InputLeftAddon,
   Text,
-  Textarea,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { IoCaretBackOutline } from "react-icons/io5";
-const AddUser = () => {
-  const { register, handleSubmit } = useForm();
+import baseURL from "../axiosConfig";
+
+const EditUser = () => {
+  const { register, handleSubmit, setValue } = useForm();
   const [userType, setUserType] = useState("");
+  const [data, setData] = useState([]);
+
   const onSubmit = (data) => console.log(data);
+
   const handleUserTypeChange = (event) => {
     setUserType(event.target.value);
   };
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("editedUser")) || {};
+
+    Object.keys(storedData).forEach((key) => {
+      setValue(key, storedData[key]);
+    });
+    setData(storedData);
+
+    setUserType(storedData.user_type || "");
+  }, [setValue]);
+  console.log(data);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Link to={"/tabledata"}>
-        {" "}
         <Button color="blue.400" ml={7} mt={7}>
           <IconButton _hover={"none"} ml={-2} bg={"none"}>
             <IoCaretBackOutline />
@@ -48,7 +62,7 @@ const AddUser = () => {
             focusBorderColor="blue.300"
             placeholder="Enter Name"
             size={"sm"}
-            {...register("first_Name", { required: true })}
+            {...register("name", { required: true })}
           />
         </GridItem>
         <GridItem mr={5}>
@@ -59,17 +73,18 @@ const AddUser = () => {
               type="tel"
               focusBorderColor="blue.300"
               placeholder="Mobile Number"
-              {...register("mobile", { required: true })}
+              {...register("phone_number", { required: true })}
             />
           </InputGroup>
         </GridItem>
         <GridItem>
           <Text>Enter your Employee Email</Text>
           <Input
+            type="email"
             focusBorderColor="blue.300"
             placeholder="Employee Email"
             size={"sm"}
-            {...register("employee_email", { required: true })}
+            {...register("email", { required: true })}
           />
         </GridItem>
         <GridItem>
@@ -109,7 +124,6 @@ const AddUser = () => {
         {userType === "Zone" && (
           <GridItem mr={5}>
             <Text>Enter Office Location</Text>
-
             <select {...register("office_location", { required: true })}>
               <option value="Zone">Zone</option>
               <option value="CC">CC</option>
@@ -120,7 +134,6 @@ const AddUser = () => {
         {userType === "CC" && (
           <GridItem>
             <Text>Enter CC Location</Text>
-
             <select {...register("cc_location", { required: true })}>
               <option value="Zone">Zone</option>
               <option value="CC">CC</option>
@@ -131,7 +144,6 @@ const AddUser = () => {
         {userType === "HQ" && (
           <GridItem>
             <Text>Enter FF Location</Text>
-
             <select {...register("ff_location", { required: true })}>
               <option value="Zone">Zone</option>
               <option value="CC">CC</option>
@@ -161,15 +173,14 @@ const AddUser = () => {
         </GridItem>
         <GridItem>
           <Link to={"/tabledata"}>
-            {" "}
             <Button w={"100%"} colorScheme="pink">
               Back
             </Button>
           </Link>
         </GridItem>
         <GridItem mr={5}>
-          <Button w={"100%"} colorScheme="twitter">
-            <Input border={0} type="Submit" />
+          <Button w={"100%"} colorScheme="twitter" type="submit">
+            Submit
           </Button>
         </GridItem>
       </Grid>
@@ -177,7 +188,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
-{
-  /* <input type="submit" /> */
-}
+export default EditUser;

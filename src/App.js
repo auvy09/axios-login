@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import TableData from "./components/TableData";
 import AddUser from "./components/AddUser";
+import EditUser from "./components/EditUser";
 
 function App() {
   const router = createBrowserRouter([
@@ -19,6 +20,10 @@ function App() {
     {
       path: "/adduser",
       element: <AddUser />,
+    },
+    {
+      path: "/edituser",
+      element: <EditUser />,
     },
   ]);
   return (

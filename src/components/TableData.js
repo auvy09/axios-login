@@ -7,6 +7,7 @@ import { MdDeleteForever } from "react-icons/md";
 import baseURL from "../axiosConfig";
 import {
   Button,
+  Flex,
   IconButton,
   Input,
   InputGroup,
@@ -26,14 +27,8 @@ import {
   Tr,
   VStack,
 } from "@chakra-ui/react";
-import {
-  IoIosAdd,
-  IoIosArrowDown,
-  IoIosArrowUp,
-  IoIosSearch,
-  IoMdMore,
-} from "react-icons/io";
-import { Link, Navigate } from "react-router-dom";
+import { IoIosAdd, IoIosSearch, IoMdMore } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 const TableData = () => {
   const [data, setData] = useState([]);
@@ -86,12 +81,15 @@ const TableData = () => {
 
   const renderArrowIcon = () => {
     return order === "ASC" ? (
-      <HiBarsArrowUp color="gray" size={"20px"} />
+      <HiBarsArrowUp color="#3182CE" size={"20px"} />
     ) : (
-      <HiBarsArrowDown color="gray" size={"20px"} />
+      <HiBarsArrowDown color="#3182CE" size={"20px"} />
     );
   };
-
+  const handleEditUser = (user) => {
+    // Save the user data to local storage
+    localStorage.setItem("editedUser", JSON.stringify(user));
+  };
   const filterData = () => {
     const lowerCaseSearch = search.toLowerCase();
     return data.filter((item) => {
@@ -114,41 +112,34 @@ const TableData = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <InputGroup mt={"20px"} borderRadius={7} size="sm">
-        <InputLeftElement
-          pointerEvents="none"
-          children={<IoIosSearch color="gray.600" />}
-        />
-        <Input
-          type="text"
-          placeholder="Search..."
-          onChange={(event) => setSearch(event.target.value)}
-          border="1px solid #949494"
-        />
-        <InputRightAddon p={0} border="none">
-          <Button
-            size="sm"
-            borderLeftRadius={0}
-            borderRightRadius={3.3}
+      <Flex justify={"space-between"} w="83%" dir="row">
+        <InputGroup mt={"20px"} borderRadius={7} size="sm">
+          <InputLeftElement
+            pointerEvents="none"
+            children={<IoIosSearch color="gray.600" />}
+          />
+          <Input
+            type="text"
+            placeholder="Search..."
+            onChange={(event) => setSearch(event.target.value)}
             border="1px solid #949494"
-            colorScheme="whatsapp"
-          >
-            Search
-          </Button>
-        </InputRightAddon>
-      </InputGroup>
+            _placeholder={"Search"}
+          />
+          <InputRightAddon p={0} border="none"></InputRightAddon>
+        </InputGroup>
 
-      <Button
-        size="sm"
-        borderRadius={3.3}
-        border="3px solid #949494"
-        colorScheme="twitter"
-        gap={"2px"}
-      >
-        <IoIosAdd fontWeight={"30px"} fontSize={"15px"} />
-        <Link to={"/adduser"}>Add user</Link>
-      </Button>
-
+        <Button
+          mt={"20px"}
+          size="sm"
+          borderRadius={3.3}
+          border="3px solid #949494"
+          colorScheme="twitter"
+          gap={"2px"}
+        >
+          <IoIosAdd fontWeight={"30px"} fontSize={"30px"} />
+          <Link to={"/adduser"}>Add user</Link>
+        </Button>
+      </Flex>
       <TableContainer mt="20px">
         <Table
           border={"1px"}
@@ -158,14 +149,14 @@ const TableData = () => {
         >
           <TableCaption>Data of users</TableCaption>
           <Thead>
-            <Tr>
+            <Tr backgroundColor={"gray.200"}>
               <Th border={"1px"}>
                 <IconButton
                   mr={{ base: "2px", md: "7px" }}
                   onClick={() => sorting("name")}
                   icon={renderArrowIcon()}
-                  bg={"white"}
-                  _hover={{ background: "white" }}
+                  bg={"gray.200"}
+                  _hover={{ background: "gray.300" }}
                 />{" "}
                 Name
               </Th>
@@ -175,8 +166,8 @@ const TableData = () => {
                   mr={"7px"}
                   onClick={() => sorting("office_name")}
                   icon={renderArrowIcon()}
-                  bg={"white"}
-                  _hover={{ background: "white" }}
+                  bg={"gray.200"}
+                  _hover={{ background: "gray.300" }}
                 />
                 Office Name
               </Th>
@@ -186,11 +177,12 @@ const TableData = () => {
                   mr={"7px"}
                   icon={renderArrowIcon()}
                   onClick={() => sorting("phone_number")}
-                  bg={"white"}
-                  _hover={{ background: "white" }}
+                  bg={"gray.200"}
+                  _hover={{ background: "gray.300" }}
                 />
                 Phone Number
               </Th>
+              <Th border={"1px"}>Action</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -209,12 +201,21 @@ const TableData = () => {
                       variant="outline"
                     />
                     <MenuList>
-                      <MenuItem icon={<IoIosAdd fontSize={"15px"} />}>
-                        Add User
-                      </MenuItem>
-                      <MenuItem icon={<LiaUserEditSolid fontSize={"15px"} />}>
-                        Edit User
-                      </MenuItem>
+                      <Link to={"/adduser"}>
+                        <MenuItem icon={<IoIosAdd fontSize={"15px"} />}>
+                          Add user
+                        </MenuItem>
+                      </Link>
+                      <Link
+                        to={"/edituser"}
+                        state={{ user: item }}
+                        onClick={() => handleEditUser(item)}
+                      >
+                        {" "}
+                        <MenuItem icon={<LiaUserEditSolid fontSize={"15px"} />}>
+                          Edit User
+                        </MenuItem>
+                      </Link>
                       <MenuItem icon={<MdDeleteForever fontSize={"15px"} />}>
                         Delete User
                       </MenuItem>
