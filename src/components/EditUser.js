@@ -8,6 +8,7 @@ import {
   InputGroup,
   InputLeftAddon,
   Text,
+  Select,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -46,7 +47,13 @@ const EditUser = () => {
           back
         </Button>
       </Link>
-      <Grid ml={30} mt={10} templateColumns={"repeat(3,1fr)"} gap={6}>
+      <Grid
+        w={"full"}
+        px={20}
+        mt={10}
+        templateColumns={"repeat(3,1fr)"}
+        gap={6}
+      >
         <GridItem>
           <Text>Enter your ID</Text>
           <Input
@@ -65,7 +72,7 @@ const EditUser = () => {
             {...register("name", { required: true })}
           />
         </GridItem>
-        <GridItem mr={5}>
+        <GridItem>
           <Text>Enter your Mobile Number</Text>
           <InputGroup size={"sm"}>
             <InputLeftAddon children="+880" />
@@ -96,63 +103,92 @@ const EditUser = () => {
             {...register("national_id", { required: true })}
           />
         </GridItem>
+
         <GridItem w={"100%"}>
           <Text>Enter your Gender</Text>
-          <select {...register("gender")}>
+          <Select {...register("gender")}>
+            <option value="">Select Gender</option>
             <option value="female">female</option>
             <option value="male">male</option>
             <option value="other">other</option>
-          </select>
+          </Select>
         </GridItem>
         <GridItem>
           <Text>Enter User Type</Text>
-          <select {...register("user_type")} onChange={handleUserTypeChange}>
-            <option value="">Select user type</option>
-            <option value="Zone">Zone</option>
-            <option value="CC">CC</option>
-            <option value="HQ">HQ</option>
-          </select>
+          <Select {...register("user_type")} onChange={handleUserTypeChange}>
+            <option value="">Select User Type</option>
+            <option value="CC">Complain Center</option>
+            <option value="FF">Field Force</option>
+          </Select>
         </GridItem>
         <GridItem>
-          <Text>Enter Designation Id</Text>
-          <select {...register("designation_id")}>
+          <Text>Enter Designation</Text>
+          <Select
+            placeholder="Select Designation"
+            {...register("designation_id")}
+          >
+            <option value="Zone">Zonal Admin</option>
+            <option value="CC">CC Admin</option>
+            <option value="FF">Field Force</option>
+          </Select>
+        </GridItem>
+        <GridItem>
+          <Text>Enter Office Location</Text>
+
+          <Select
+            placeholder="Select Office Location"
+            {...register("office_location_name")}
+          >
             <option value="Zone">Zone</option>
             <option value="CC">CC</option>
             <option value="HQ">HQ</option>
-          </select>
+          </Select>
         </GridItem>
-        {userType === "Zone" && (
-          <GridItem mr={5}>
-            <Text>Enter Office Location</Text>
-            <select {...register("office_location", { required: true })}>
+        {(userType === "FF" || userType === "CC") && (
+          <GridItem>
+            <Text>Enter Palli Bidyut Samity</Text>
+
+            <select
+              {...register("palli_bidyut_samity_name", { required: true })}
+            >
+              <option value="">Select Palli Bidyut Samity</option>
               <option value="Zone">Zone</option>
               <option value="CC">CC</option>
               <option value="HQ">HQ</option>
             </select>
           </GridItem>
         )}
-        {userType === "CC" && (
+        {(userType === "FF" || userType === "CC") && (
           <GridItem>
-            <Text>Enter CC Location</Text>
-            <select {...register("cc_location", { required: true })}>
+            <Text>Zone/Sub-zone/HQ</Text>
+
+            <Select {...register("office_name", { required: true })}>
               <option value="Zone">Zone</option>
               <option value="CC">CC</option>
               <option value="HQ">HQ</option>
-            </select>
+            </Select>
           </GridItem>
         )}
-        {userType === "HQ" && (
+        {(userType === "FF" || userType === "CC") && (
           <GridItem>
-            <Text>Enter FF Location</Text>
-            <select {...register("ff_location", { required: true })}>
+            <Text>Enter Complain Center</Text>
+
+            <Select {...register("complaint_center_name", { required: true })}>
+              <option value="">Select Complain Center</option>
               <option value="Zone">Zone</option>
               <option value="CC">CC</option>
               <option value="HQ">HQ</option>
-            </select>
+            </Select>
           </GridItem>
         )}
       </Grid>
-      <Grid ml={30} mt={10} templateColumns={"repeat(2,1fr)"} gap={6}>
+      <Grid
+        w={"full"}
+        px={20}
+        mt={10}
+        templateColumns={"repeat(2,1fr)"}
+        gap={6}
+      >
         <GridItem>
           <Text>Enter your Present Address</Text>
           <Input

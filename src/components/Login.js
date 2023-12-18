@@ -48,14 +48,6 @@ const Login = () => {
   localStorage.setItem("token", token);
   const userToken = localStorage.getItem("token");
 
-  baseURL
-    .get("/user")
-    .then((response) => {
-      console.log("User Data", response.data.data);
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
   return (
     <Box>
       <Grid
